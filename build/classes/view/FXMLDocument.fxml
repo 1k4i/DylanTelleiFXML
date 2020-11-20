@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="363.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.FXMLDocumentController">
+    <children>
+        <Button fx:id="button" layoutX="241.0" layoutY="160.0" onAction="#handleButtonAction" text="Click Me!" />
+        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+      <Button fx:id="buttonCreate" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#createRecipe" prefHeight="26.0" prefWidth="123.0" text="Create Recipe" />
+      <Button fx:id="buttonRead" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" onAction="#readAllRecipe" text="Read All Recipes" />
+      <Button fx:id="buttonUpdate" layoutX="212.0" layoutY="14.0" mnemonicParsing="false" onAction="#updateRecipe" prefHeight="26.0" prefWidth="134.0" text="Update Recipe" />
+      <Button fx:id="buttonDelete" layoutX="212.0" layoutY="49.0" mnemonicParsing="false" onAction="#deleteRecipe" prefHeight="26.0" prefWidth="134.0" text="Delete Recipe" />
+      <Button fx:id="buttonreadByID" layoutX="14.0" layoutY="87.0" mnemonicParsing="false" onAction="#readByID" text="Read By ID" />
+      <Button fx:id="buttonreadByTitle" layoutX="14.0" layoutY="125.0" mnemonicParsing="false" onAction="#readByTitle" text="Read By Title" />
+      <Button fx:id="buttonReadTitleTag" layoutX="205.0" layoutY="87.0" mnemonicParsing="false" onAction="#readByTitleAndTag" text="Read By Title and Tags" />
+    </children>
+</AnchorPane>
