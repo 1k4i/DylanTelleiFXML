@@ -23,9 +23,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
@@ -228,7 +230,7 @@ public class FXMLDocumentController implements Initializable {
     }
         
     @FXML
-    void search(ActionEvent event) {
+    void searchByTitleAction(ActionEvent event) {
         System.out.println("clicked");
         
         String name = textboxName.getText();
@@ -250,12 +252,9 @@ public class FXMLDocumentController implements Initializable {
             setTableData(recipes);
         }        
     }
-        @FXML
-    void advancedSearch(ActionEvent event) {
 
-    }
     
-        @FXML
+    @FXML
     void searchByNameAdvancedAction(ActionEvent event) {
         System.out.println("clicked");
 
@@ -292,7 +291,7 @@ public class FXMLDocumentController implements Initializable {
         Recipe selectedRecipe = recipeTable.getSelectionModel().getSelectedItem();
         
         // fxml loader
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DetailModelView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/detailedModelView.fxml"));
 
         // load the ui elements
         Parent detailedModelView = loader.load();
@@ -322,7 +321,7 @@ public class FXMLDocumentController implements Initializable {
 
         
         // fxml loader
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DetailModelView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/detailedModelView.fxml"));
 
         // load the ui elements
         Parent detailedModelView = loader.load();
@@ -371,6 +370,16 @@ public class FXMLDocumentController implements Initializable {
         ////Code used from Prof Billah Guide
         manager = (EntityManager)
         Persistence.createEntityManagerFactory("DylanTelleiFXMLPU").createEntityManager();
+        
+        recipeTitle.setCellValueFactory(new PropertyValueFactory<>("Name"));
+        recipeId.setCellValueFactory(new PropertyValueFactory<>("Id"));
+
+        recipeTags.setCellValueFactory(new PropertyValueFactory<>("Cgpa"));
+
+        //eanble row selection
+        // (SelectionMode.MULTIPLE);
+        recipeTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+//        studentTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
     
     // Code from lines 87 - end from guide as allowed in instructions..

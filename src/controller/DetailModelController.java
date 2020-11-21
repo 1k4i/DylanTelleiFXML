@@ -4,6 +4,7 @@
 package controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -70,8 +71,8 @@ public class DetailModelController {
         labelValue.setText(model.getTitle());
 
         try {
-            // path points to /resource/images/
-            String imagename = "/resource/images/" + model.getTitle() + ".png";
+
+            String imagename = "/resources/images/" + model.getTitle() + ".png";
             Image profile = new Image(getClass().getResourceAsStream(imagename));
             image.setImage(profile);
 
@@ -80,12 +81,12 @@ public class DetailModelController {
         }
     }
 
-    @FXML // This method is called by the FXMLLoader when initialization is complete
+    @FXML
     void initialize() {
-        assert backButton != null : "fx:id=\"backButtong\" was not injected: check your FXML file 'DetailModelView.fxml'.";
-        assert labelID != null : "fx:id=\"labelID\" was not injected: check your FXML file 'DetailModelView.fxml'.";
-        assert labelValue != null : "fx:id=\"labelValue\" was not injected: check your FXML file 'DetailModelView.fxml'.";
-        assert image != null : "fx:id=\"image\" was not injected: check your FXML file 'DetailModelView.fxml'.";
+        assert backButton != null : "fx:id=\"backButton\" was not injected: check your FXML file 'detailedModelView.fxml'.";
+        assert labelID != null : "fx:id=\"labelID\" was not injected: check your FXML file 'detailedModelView.fxml'.";
+        assert labelValue != null : "fx:id=\"labelValue\" was not injected: check your FXML file 'detailedModelView.fxml'.";
+        assert image != null : "fx:id=\"image\" was not injected: check your FXML file 'detailedModelView.fxml'.";
 
         backButton.setDisable(true);
 
