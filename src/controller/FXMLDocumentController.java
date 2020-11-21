@@ -5,15 +5,28 @@
  */
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
@@ -121,7 +134,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     @FXML
-    void readByTitleAndTag(ActionEvent event) {
+    void readByTitleAndId(ActionEvent event) {
         // name and cpga
         
         Scanner input = new Scanner(System.in);
@@ -131,14 +144,33 @@ public class FXMLDocumentController implements Initializable {
         System.out.println("Enter Title:");
         String title = input.next();
         
-        System.out.println("Enter Tags:");
-        String tags = input.next();
+        System.out.println("Enter id:");
+        int id = input.nextInt();
         
         // create a student instance      
-        List<Recipe> recipe =  readByTitleAndTag(title, tags);
+        List<Recipe> recipe =  readByTitleAndId(title, id);
 
     }
+    @FXML
+    private TextField textboxName;
 
+    @FXML
+    private TableView<Recipe> recipeTable;
+
+    @FXML
+    private TableColumn<Recipe, Integer> recipeId;
+
+    @FXML
+    private TableColumn<Recipe, String> recipeTitle;
+
+    @FXML
+    private TableColumn<Recipe, String> dateCreated;
+
+    @FXML
+    private TableColumn<Recipe, String> recipeTags;
+    
+    @FXML
+    private TableColumn<Recipe, String> createdBy;
     
 
     @FXML
@@ -180,6 +212,141 @@ public class FXMLDocumentController implements Initializable {
         updateRecipe(recipe);
     }
 
+    private ObservableList<Recipe> recipeData;
+
+    
+    public void setTableData(List<Recipe> recipeList) {
+
+        recipeData = FXCollections.observableArrayList();
+        
+        recipeList.forEach(r -> {
+            recipeData.add(r);
+        });
+
+        recipeTable.setItems(recipeData);
+        recipeTable.refresh();
+    }
+        
+    @FXML
+    void search(ActionEvent event) {
+        System.out.println("clicked");
+        
+        String name = textboxName.getText();
+
+        // calling a db read operaiton, readByName
+        List<Recipe> recipes = readByTitle(name);
+
+        if (recipes == null || recipes.isEmpty()) {
+
+            // show an alert to inform user 
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Information Dialog Box");// line 2
+            alert.setHeaderText("This is header section to write heading");// line 3
+            alert.setContentText("No Recipe");// line 4
+            alert.showAndWait(); // line 5
+        } else {
+
+            // setting table data
+            setTableData(recipes);
+        }        
+    }
+        @FXML
+    void advancedSearch(ActionEvent event) {
+
+    }
+    
+        @FXML
+    void searchByNameAdvancedAction(ActionEvent event) {
+        System.out.println("clicked");
+
+        // getting the name from input box        
+        String name = textboxName.getText();
+
+        // calling a db read operaiton, readByName
+        List<Recipe> recipes = readByNameAdvanced(name);
+
+        // setting table data
+        //setTableData(students);
+        // add an alert
+        if (recipes == null || recipes.isEmpty()) {
+
+            // show an alert to inform user 
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Information Dialog Box");// line 2
+            alert.setHeaderText("This is header section to write heading");// line 3
+            alert.setContentText("No Recipe");// line 4
+            alert.showAndWait(); // line 5
+        } else {
+            // setting table data
+            setTableData(recipes);
+        }
+
+    }
+
+    @FXML
+    void actionShowDetails(ActionEvent event) throws IOException {
+        System.out.println("clicked");
+
+        
+        // pass currently selected model
+        Recipe selectedRecipe = recipeTable.getSelectionModel().getSelectedItem();
+        
+        // fxml loader
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DetailModelView.fxml"));
+
+        // load the ui elements
+        Parent detailedModelView = loader.load();
+
+        // load the scene
+        Scene tableViewScene = new Scene(detailedModelView);
+
+        //access the detailedControlled and call a method
+        DetailModelController detailedControlled = loader.getController();
+
+
+        detailedControlled.initData(selectedRecipe);
+
+        // create a new state
+        Stage stage = new Stage();
+        stage.setScene(tableViewScene);
+        stage.show();
+
+    }
+
+    @FXML
+    void actionShowDetailsInPlace(ActionEvent event) throws IOException {
+        System.out.println("clicked");
+        
+                // pass currently selected model
+        Recipe selectedRecipe = recipeTable.getSelectionModel().getSelectedItem();
+
+        
+        // fxml loader
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DetailModelView.fxml"));
+
+        // load the ui elements
+        Parent detailedModelView = loader.load();
+
+        // load the scene
+        Scene tableViewScene = new Scene(detailedModelView);
+
+        //access the detailedControlled and call a method
+        DetailModelController detailedControlled = loader.getController();
+
+
+        detailedControlled.initData(selectedRecipe);
+
+        // pass current scene to return
+        Scene currentScene = ((Node) event.getSource()).getScene();
+        detailedControlled.setPreviousScene(currentScene);
+
+        //This line gets the Stage information
+        Stage stage = (Stage) currentScene.getWindow();
+
+        stage.setScene(tableViewScene);
+        stage.show();
+    }
+    
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -194,6 +361,7 @@ public class FXMLDocumentController implements Initializable {
         }   
         
     }
+
     //Code used from Dr. Billah Guide
     EntityManager manager;
     
@@ -258,12 +426,12 @@ public class FXMLDocumentController implements Initializable {
         return recipe;
     }
     
-    public List<Recipe> readByTitleAndTag(String title, String tags){
-        Query query = manager.createNamedQuery("Recipe.findByTitleAndTags");
+    public List<Recipe> readByTitleAndId(String title, Integer Id){
+        Query query = manager.createNamedQuery("Recipe.findByTitleAndId");
         
         // setting query parameter
         query.setParameter("title", title);
-        query.setParameter("tags", tags);
+        query.setParameter("id", Id);
         
         
         // execute query
@@ -334,6 +502,25 @@ public class FXMLDocumentController implements Initializable {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    /**
+     *
+     * Quiz 4 begin
+     */
+    public List<Recipe> readByNameAdvanced(String name) {
+        Query query = manager.createNamedQuery("Recipe.findByNameAdvanced");
+
+        // setting query parameter
+        query.setParameter("name", name);
+
+        // execute query
+        List<Recipe> recipes = query.getResultList();
+        for (Recipe r : recipes) {
+            System.out.println(r.getId() + " " + r.getTitle() + " " + r.getDatecreated());
+        }
+
+        return recipes;
     }
 
 

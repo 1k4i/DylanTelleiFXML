@@ -28,7 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Recipe.findById", query = "SELECT r FROM Recipe r WHERE r.id = :id")
     , @NamedQuery(name = "Recipe.findByTitle", query = "SELECT r FROM Recipe r WHERE r.title = :title")
     , @NamedQuery(name = "Recipe.findByTag", query = "SELECT r FROM Recipe r WHERE r.tags = :tags")
-    , @NamedQuery(name = "Recipe.findByTitleAndTags", query = "SELECT r FROM Recipe r WHERE r.title = :title and r.tags = :tags")})
+    , @NamedQuery(name = "Recipe.findByTitleAndId", query = "SELECT r FROM Recipe r WHERE r.title = :title and r.id = :id")
+    , @NamedQuery(name = "Recipe.findByNameAdvanced", query = "SELECT r FROM Recipe r WHERE  LOWER(r.title) LIKE  CONCAT('%', LOWER(:title), '%')")})
+
 public class Recipe implements Serializable {
 
     private static final long serialVersionUID = 1L;
